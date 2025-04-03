@@ -25,26 +25,48 @@ const Title = styled.div`
     font-size: 14px;
   }
 `;
+const workoutParameter = [
+  "category",
+  "workoutName",
+  "sets",
+  "reps",
+  "weight",
+  "duration",
+  "caloriesBurned",
+];
 
 const AddWorkout = ({ workout, setWorkout, addNewWorkout, buttonLoading }) => {
+  const [workParameter, setWorkParameter] = useState([]);
+
+  const handleWorkout = (e) => {
+    const property = e.target.name;
+    const value = e.target.value;
+    const newValue = {
+      [property]: value,
+    };
+    setWorkParameter([...workParameter, newValue]);
+    setWorkout(
+      workParameter.reduce((a, v) => {
+        return Object.assign(a, v);
+      }, {})
+    );
+  };
+
   return (
     <Card>
       <Title>Add New Workout</Title>
-      <TextInput
-        label="Workout"
-        textArea
-        rows={10}
-        placeholder={`Enter in this format:
-
-#Category
--Workout Name
--Sets
--Reps
--Weight
--Duration`}
-        value={workout}
-        handelChange={(e) => setWorkout(e.target.value)}
-      />
+      {workoutParameter.map((work) => {
+        return (
+          <TextInput
+            name={work}
+            label={work.toUpperCase()}
+            rows={10}
+            value={workout?.work}
+            placeholder={"Enter respective value"}
+            handleChange={(e) => handleWorkout(e)}
+          />
+        );
+      })}
       <Button
         text="Add Workout"
         small
